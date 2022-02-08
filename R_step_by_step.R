@@ -77,6 +77,12 @@ foo <-5*5; foo;
 foo <- 5^5; foo;
 foo <- log(5); foo;
 foo <- sqrt(5); foo; 
+foo <- log(((5^2)*(2*5)/3)-5)
+baz <- "Do Not Panic"
+bat <- 'Do Not Panic'
+caz <- "Don't Panic"
+daz <- 'The "Heart of Gold" comes equipped with heated leather seats and an infinite improbability drive' 
+dat <- '42'
 whatisthis(foo);
 #' Character strings. Create these by wrapping single (`'`) or double (`"`)
 #' quotes around the value.
@@ -97,7 +103,9 @@ whatisthis(foo);
 #' functions or converted from a character string using `as.Date()`.
 
 #+ assignment_datetime
-
+Sys.Date()
+Sys.time()
+?as.Date()
 #' Factors are basically integers that have labels. They are a human-readable
 #' alternative to using integer codes for discrete data. These will make more
 #' sense after we talk about vectors in the next section.
