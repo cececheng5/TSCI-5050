@@ -12,6 +12,11 @@
 #' number_sections: false
 #' keep_md: true
 #' fig_caption: true
+#' output: 
+#'   html_document: 
+#'     toc: true
+#'     toc_float: true
+#'     code_folding: show
 #' ---
 #'
 #+ init, echo=FALSE, message=FALSE, warning=FALSE
@@ -93,6 +98,12 @@ whatisthis(foo);
 #' `==`, `!=`, `>=`, `<=`
 
 #+ assignment_logical
+One <- TRUE
+Zero <- FALSE
+baz==bat
+baz==caz
+dat>foo
+baz>=bat
 
 #' Missing values are represented by `NA` (no quotes for any of these). Null
 #' values are _not_ the same as missing and they are represented by `NULL`. In
@@ -103,9 +114,10 @@ whatisthis(foo);
 #' functions or converted from a character string using `as.Date()`.
 
 #+ assignment_datetime
+today <- "2/8/2022"
 Sys.Date()
 Sys.time()
-?as.Date()
+as.Date(32768, origin = "1900-01-01")
 #' Factors are basically integers that have labels. They are a human-readable
 #' alternative to using integer codes for discrete data. These will make more
 #' sense after we talk about vectors in the next section.
@@ -120,6 +132,8 @@ Sys.time()
 #' values.
 #'
 #' ### Vectors
+print(lit <- c(5, 10, 15, 20, 25, 30))
+print(lib <- c(-1, -3, -6, 18, 45, 63))
 #'
 #' The default data structure in R is a `vector`. You create one with the `c()`
 #' command with any number of arguments. All items in a vector have to be the
@@ -133,11 +147,15 @@ Sys.time()
 #' are identical, and both return `1` when used with the `length()` function.
 
 #+ vectors_length1
-
+length(lit)
 #' If you want to create a sequence of consecutive integers, you can use the `:`
 #' operator.
 
 #+ vectors_sequence
+55:73
+-10:15
+98:80
+seq_len(20)
 
 #' In most other languages, you need to use a `for` loop in order to perform
 #' some sort of change to a series of values. In R, you often don't have to
@@ -147,21 +165,37 @@ Sys.time()
 #' want all of them to be either the same length or length 1.
 
 #+ vectors_operators
-
+lit+12
+lit+lib
+lib+lit
+lit/lib
+lit>=12
+lib<=35
+boo <- lib<=35
+c(lit,lib)
+c(lit,lib,"76")
 #' You can assign names to some or all members of a vector when you create it.
 #' You can also assign or re-assign names later using the `names()` function.
 
 #+ vectors_names1
-
+print(jar <- c(a="cat",best="dog",c="fish", slow="turtle"))
+jar["best"]
+jar[c("best","c")]
 #' You can also use it to see the currently assigned names.
 
 #+ vectors_names2
-
+names(jar)
+names(jar) <- c("libby","beau","bob","bob2") #renaming character vector
+jar
+names(jar)[3]
+names(jar)[3] <-"milo" #renaming only third character vector
+jar
 #' You can subset a vector by using `[...]` with the `...` replaced by _another_
 #' vector, of integers indicating which positions you want to extract. Or you
 #' could use a vector of names.
 
 #+ vectors_subset1
+lit[3]
 
 #' If you just need a single value, use a single name or number.
 
@@ -172,18 +206,32 @@ Sys.time()
 #' expressions separated by commas `,`.
 
 #+ vectors_subset3
-
+lit[c(1,2,3)]
+lit[c(1:3,5:6)]
 #' Other useful functions for exploring vectors: `length()`, `summary()`,
 #' `table()`, `head()`, `tail()`, `sum()`, `diff()`, `seq_along()`.
 
 #+ vectors_explore
-
+summary(lit)
+summary(jar)
+table(lit) #frequency table 
+bat <- sample(1:10,30,replace=TRUE)*1000 #how to generate 30 integers between 1 and 10
+table(bat)
+bat
+head(bat) #fist several values of bat
+tail(bat) #last several values of bat 
+diff(bat) #difference between two consecutive values
+sum(bat) #sum of all the values in bat (vector)
+seq_along(bat) #generate ID numbers unique to bat
+sum(bat,na.rm = TRUE)
+head(jar)
 #' Here are some aggregation functions. For these, make sure to use `na.rm=T` if
 #' your vector has `NA`s in it... `max()`, `min()`, `mean()`, `median()`,
 #' `quantile()`.
 
 #+ vectors_aggregate
-
+quantile(bat)
+quantile(bat,na.rm = T)
 #' ### Data Frames
 #'
 #' You can bundle several vectors of the same length together into a
@@ -198,7 +246,52 @@ Sys.time()
 #' small datasets) `plot()`.
 
 #+ df_explore
+dim(iris) #dimensions of the data frame
+nrow(iris) #number of rows in the data frame
+ncol(iris) #number of columns in the data frame 
+names(iris) #names of the columes in the data frame 
+head(iris) #fist several values of iris database
+tail(iris) #last several values of iris database 
+head(iris,20)
 
+#' How to select rows in a dataset 
+#+ df_subset 
+iris[1:20,] #rows 1 through 20 in iris dataset 
+iris[c(1:3,7,10,12:15,55:73,95,140),] #showing specific rows using numbers
+iris[-c(3:20),] #skipping rows 3 through 20
+seq_len(nrow(iris))
+sample(seq_len(nrow(iris)), 20) #sampling without replacement, limited to the size of the population
+sample(seq_len(nrow(iris)), 300, replace=TRUE) #sampling with replacement
+flower <- iris[sample(seq_len(nrow(iris)), 20),]
 
+#' How to select columns in a dataset 
+#+ df_columns, error=TRUE, results="hide"
+iris[,1:3] #columns 1 through 2, leaving rows blank
+iris[,c("Petal.Length", "Petal.Width")]
+PreVar <- c("Petal.Length", "Petal.Width") #predefined variables 
+iris[,PreVar]
+iris[,c(PreVar, "Sun")]
 
+iris$Species #looking for a specific column within the dataset 
+Outcome <- "Species"
+iris$Outcome
+iris[[Outcome]]
+iris[["Species"]]
+
+#' How to select columns and rows simultaneously
+#+ df_columnsrows
+iris[4:10,PreVar]
+
+#' ## Comments
+#'
+#' `#` This is an ordinary comment. Everything after it on the same line is not
+#' executed.
+#'
+#' `#'` This indicates that this line should be formatted as text. It must be
+#' the first two characters in that line in order to work.
+#'
+#' `#+` This indicates that the following lines (until the next #' or #+ )
+#' should be treated as a "code chunk". I.e. the next lines (but not this one)
+#' will be run, the code will be displayed according to your settings and the
+#' results will be displayed according to your settings.
 
