@@ -296,14 +296,15 @@ tidy(Performance)
 lm(mpg~hp+wt+qsec,mtcars) %>%tidy() %>% select(c("estimate","p.value"))
 Performance %>%tidy() %>% select(c("estimate","p.value"))
 whatisthis(Performance)
-Performance %>%tidy() %>% select(c("estimate","p.value")) %>% splice(-1)
-
+Performance %>%tidy() %>% select(c("estimate","p.value")) %>% slice(-1)
 #select is to select columns
-#splice is to select rows 
+#slice is to select rows 
 
-#' ## Multiple Comparison
+#' ## Multiple Comparisons
 #' 
-#+ 
+#+ Multiple comparisons
+Performance %>%tidy() %>% select(c("p.value")) %>% slice(-1)
+Performance %>%tidy() %>% select(c("p.value")) %>% slice(-1) %>% unlist() %>% p.adjust()
 
 #' ## Comments
 #'
