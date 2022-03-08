@@ -31,6 +31,7 @@ library(GGally); # plotting
 library(rio); # formatting for importing and exporting files
 library(pander); # formats tables
 library(printr);
+library(broom);
 options(max.print=42); # how many lines of results are printed
 panderOptions('table.split.table',Inf); panderOptions('table.split.cells',Inf);
 whatisthis <- function(xx){
@@ -282,6 +283,28 @@ iris[["Species"]]
 #+ df_columnsrows
 iris[4:10,PreVar]
 
+#' ## Linear Models 
+#' 
+#+ linear_models
+head(mtcars) #view of the mtcars dataset
+lm(mpg~hp+wt+qsec,mtcars) #linear model of columns in the dataset 
+Performance <- lm(mpg~hp+wt+qsec,mtcars) #saving lm to an object
+summary(Performance)
+summary(Performance)$coefficient #print or summary with summarize the data
+glance(Performance)
+tidy(Performance)
+lm(mpg~hp+wt+qsec,mtcars) %>%tidy() %>% select(c("estimate","p.value"))
+Performance %>%tidy() %>% select(c("estimate","p.value"))
+whatisthis(Performance)
+Performance %>%tidy() %>% select(c("estimate","p.value")) %>% splice(-1)
+
+#select is to select columns
+#splice is to select rows 
+
+#' ## Multiple Comparison
+#' 
+#+ 
+
 #' ## Comments
 #'
 #' `#` This is an ordinary comment. Everything after it on the same line is not
@@ -294,4 +317,3 @@ iris[4:10,PreVar]
 #' should be treated as a "code chunk". I.e. the next lines (but not this one)
 #' will be run, the code will be displayed according to your settings and the
 #' results will be displayed according to your settings.
-
