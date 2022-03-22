@@ -32,6 +32,7 @@ library(rio); # formatting for importing and exporting files
 library(pander); # formats tables
 library(printr);
 library(broom);
+library(dplyr); # adding dplyr library 
 options(max.print=42); # how many lines of results are printed
 panderOptions('table.split.table',Inf); panderOptions('table.split.cells',Inf);
 whatisthis <- function(xx){
@@ -233,7 +234,7 @@ head(jar)
 #+ vectors_aggregate
 quantile(bat)
 quantile(bat,na.rm = T)
-#' ### Data Frames
+#' ## Data Frames
 #'
 #' You can bundle several vectors of the same length together into a
 #' `data.frame` using the `data.frame()` command. A `data.frame` is a tabular
@@ -270,8 +271,8 @@ flower <- iris[sample(seq_len(nrow(iris)), 20),]
 iris[,1:3] #columns 1 through 2, leaving rows blank
 iris[,c("Petal.Length", "Petal.Width")]
 PreVar <- c("Petal.Length", "Petal.Width") #predefined variables 
-iris[,PreVar]
-iris[,c(PreVar, "Sun")]
+iris[ , PreVar]
+iris[ , c(PreVar, "Species")]
 
 iris$Species #looking for a specific column within the dataset 
 Outcome <- "Species"
@@ -318,3 +319,24 @@ Performance %>%tidy() %>% select(c("p.value")) %>% slice(-1) %>% unlist() %>% p.
 #' should be treated as a "code chunk". I.e. the next lines (but not this one)
 #' will be run, the code will be displayed according to your settings and the
 #' results will be displayed according to your settings.
+
+#' ## Working With Datasets and dplyr 
+#'
+#+ Define location and import your files 
+list.files #This allows you to search your desktop for a specific file after they are downloaded
+list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/") #This allows you to find the Sample Data file
+Example1 <- list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/", full.names = TRUE) %>% sapply(import) #Renaming as a vector, example1
+#Piping the previous command to sapply(whatever function you want it to do to
+#all the files in sample data). And normalizes the names. In this case we are
+#importing
+# View(Example1) Allows you to view the files saved as example one (ie. all the files in the sample data folder)
+
+#+ Debugging 
+Example1$`/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data//Birthweight.sav` #selecting one dataset or file within the folder
+Example1$`/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data//Birthweight.sav` %>% View #viewing the dataset
+Example1 <- list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/", full.names = TRUE) %>% sapply(import) %>%setNames(., basename(names(.)))
+#Standardizing names for files. Removes Users/CeCe/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data
+
+#+ Working with a specific dataset 
+Example2 <- Example1$Birthweight.sav #Saving birthweight data only as example2 
+View(Example2) #viewing the birthweight dataset 
