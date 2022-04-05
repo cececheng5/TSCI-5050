@@ -319,24 +319,49 @@ Performance %>%tidy() %>% select(c("p.value")) %>% slice(-1) %>% unlist() %>% p.
 #' should be treated as a "code chunk". I.e. the next lines (but not this one)
 #' will be run, the code will be displayed according to your settings and the
 #' results will be displayed according to your settings.
-
-#' ## Working With Datasets and dplyr 
+#'
+#' ## Working with Datasets
 #'
 #+ Define location and import your files 
 list.files #This allows you to search your desktop for a specific file after they are downloaded
-list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/") #This allows you to find the Sample Data file
-Example1 <- list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/", full.names = TRUE) %>% sapply(import) #Renaming as a vector, example1
+list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/") 
+#This allows you to find the Sample Data file
+Example1 <- list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/", 
+                       full.names = TRUE) %>% sapply(import) #Renaming as a vector, example1
 #Piping the previous command to sapply(whatever function you want it to do to
 #all the files in sample data). And normalizes the names. In this case we are
 #importing
 # View(Example1) Allows you to view the files saved as example one (ie. all the files in the sample data folder)
+list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/", 
+           full.names = TRUE) %>% sapply(import) %>% names #listing out file names
+
+# Importing files into R
+birthweight <- import("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/Birthweight.sav")
 
 #+ Debugging 
-Example1$`/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data//Birthweight.sav` #selecting one dataset or file within the folder
-Example1$`/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data//Birthweight.sav` %>% View #viewing the dataset
-Example1 <- list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/", full.names = TRUE) %>% sapply(import) %>%setNames(., basename(names(.)))
+Example1$`/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data//Birthweight.sav` %>% head() #selecting one dataset or file within the folder
+# Example1$`/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data//Birthweight.sav` %>% View #viewing the dataset
+Example1 <- list.files("/Users/Cece/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data/", 
+                       full.names = TRUE) %>% sapply(import) %>%setNames(., basename(names(.)))
 #Standardizing names for files. Removes Users/CeCe/Desktop/UTSA MFM fellowship/MSCI-TS/Sample Data
 
 #+ Working with a specific dataset 
 Example2 <- Example1$Birthweight.sav #Saving birthweight data only as example2 
 View(Example2) #viewing the birthweight dataset 
+
+#' ## Introduction to dplyr
+#' 
+#+ mutate(birthweight)
+mutate(birthweight,AGE=AGE*12) %>% View # Converting age to age in months
+mutate(birthweight,AGEMonths=AGE*12) %>% head # Adding age in months as a last column
+mutate(birthweight,AGEMonths=AGE*12, AGEDays=AGEMonths*30.4) %>% head
+table(birthweight$RACE) #extracting different variables from one column
+with(birthweight, case_when(RACE == 1 ~ "Caucasian", RACE == 2 ~ "Asian",
+                            RACE == 3 ~ "African American/Black", TRUE ~ as.character(RACE))) %>% table
+# Assigning descriptive values to race 
+mutate(birthweight,AGEMonths=AGE*12, AGEDays=AGEMonths*30.4
+       , RACEName=case_when(RACE == 1 ~ "Caucasian"
+                   , RACE == 2 ~ "Asian"
+                   , RACE == 3 ~ "African American/Black"
+                   , TRUE ~ as.character(RACE))) %>% head
+summary(birthweight$BWT)
