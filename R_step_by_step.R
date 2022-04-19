@@ -374,15 +374,14 @@ summary(birthweight)
 #+ summarize(birthweight)
 summarize(birthweight, Age=median(AGE)) #getting the median AGE
 summarize(birthweight, Age=mean(AGE))
-summarize(birthweight, MedianAge=median(AGE), Height=median(HT), Birthweight=median(BWT), MeanAge=mean(AGE)) 
-# building the summarize function out
+summarize(birthweight, MedianAge=median(AGE), Height=median(HT), Birthweight=median(BWT), MeanAge=mean(AGE)) # building the summarize function out
 
 #+ group_by(dataset, variables)
 group_by(birthweight, SMOKE) #shows dataframe by smoking, 2 groups in SMOKE
 group_by(birthweight, SMOKE)%>%summarize(MedianAge=median(AGE), Height=median(HT), Birthweight=median(BWT), MeanAge=mean(AGE))
 group_by(birthweight, SMOKE)%>%summarize(MedianAge=median(AGE), Height=median(HT), Birthweight=median(BWT), MeanAge=mean(AGE))
-group_by(birthweight, SMOKE)%>% summarize(across(where(is.numeric), mean))
-# showing the mean for all variables in a dataset
+group_by(birthweight, SMOKE)%>% summarize(across(where(is.numeric), mean))# showing the mean for all variables in a dataset
+
 group_by(birthweight, SMOKE)%>% summarize(across(where(is.numeric), mean, .names = '{.col}_mean')
                                           ,across(where(is.numeric), sd, .names = '{.col}_sd'))
                                                
