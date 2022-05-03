@@ -383,5 +383,7 @@ group_by(birthweight, SMOKE)%>%summarize(MedianAge=median(AGE), Height=median(HT
 group_by(birthweight, SMOKE)%>% summarize(across(where(is.numeric), mean))# showing the mean for all variables in a dataset
 
 group_by(birthweight, SMOKE)%>% summarize(across(where(is.numeric), mean, .names = '{.col}_mean')
-                                          ,across(where(is.numeric), sd, .names = '{.col}_sd'))
-                                               
+                                          ,across(where(is.numeric), sd, .names = '{.col}_sd')) #transforming names across all columns
+group_by(birthweight, SMOKE)%>% summarize(across(where(is.numeric), list(Mean=mean,SD=sd))) 
+group_by(birthweight, SMOKE)%>% summarize(across(where(is.numeric), list(Mean=mean,SD=sd, Md=median, InQR=IQR))) 
+group_by(birthweight, SMOKE)%>% mutate(across(where(is.numeric), list(Mean=mean,SD=sd, Md=median, InQR=IQR)))                                                
